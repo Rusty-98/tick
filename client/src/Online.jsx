@@ -1,9 +1,143 @@
-import React from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
+import io from 'socket.io-client'
 
 const Online = () => {
+
+    const socket = useMemo(() => io("http://localhost:3000"), []);
+    const [isPlayer, setIsPlayer] = useState(false);
+    const [name, setName] = useState("");
+    const [code, setCode] = useState();
+    const [player1, setPlayer1] = useState("");
+    const [player2, setPlayer2] = useState("");
+    const [wait, setWait] = useState(true);
+    const [winner, setWinner] = useState();
+    const [chaal, setChaal] = useState('1');
+    const [board, setBoard] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0])
+    const [socketId, setSocketId] = useState("");
+
+    const handleJoin = () => {
+        if (name === "" || code === undefined) {
+            return;
+        }
+        setIsPlayer(true);
+        const data = {
+            name: name,
+            code: code,
+        }
+        socket.emit("set", data)
+    }
+
+    useEffect(() => {
+
+        socket.on("connect", () => {
+            setSocketId(socket.id);
+            console.log("connected", socket.id);
+        });
+
+        const gameStartHandler = (data) => {
+            console.log(data.player1, data.player2);
+            setWait(false);
+            setPlayer1(data.player1);
+            setPlayer2(data.player2);
+        };
+
+        socket.on("receive-board", (data) => {
+            console.log(data);
+            setBoard((board) => [...board, data]);
+        });
+
+        socket.on("gameStart", gameStartHandler);
+
+        return () => {
+            socket.off("gameStart", gameStartHandler);
+        };
+    }, [socket, player1, player2]);
+
+    const handleClick = (id) => {
+        if (winner !== '' || board[id] !== 0) return; // Don't allow clicks if there's already a winner or the cell is already filled
+        const newData = [...board];
+        newData[id] = chaal === '1' ? 1 : 2; // Player 1 move if chaal is '1', otherwise Player 2 move
+        setBoard(newData);
+        checkWinner(newData);
+        setChaal(chaal === '1' ? '2' : '1'); // Change turn to Player 2 if Player 1 is the current player, otherwise change to Player 1
+        socket.emit('turn', newData);
+    };
+
+    useEffect(() => {
+        const tableHandler = (data) => {
+            setBoard(data);
+        };
+
+        socket.on("table", tableHandler);
+
+        return () => {
+            socket.off("table", tableHandler);
+        };
+    })
+
+    const checkWinner = (currentData) => {
+        const winningCombos = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+            [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+            [0, 4, 8], [2, 4, 6] // Diagonals
+        ];
+
+        for (const combo of winningCombos) {
+            const [a, b, c] = combo;
+            if (currentData[a] !== 0 && currentData[a] === currentData[b] && currentData[b] === currentData[c]) {
+                if (currentData[a] === 1) {
+                    setWinner("1");
+                } else {
+                    setWinner('2');
+                }
+                return;
+            }
+        }
+
+        if (!currentData.includes(0)) {
+            setWinner('draw');
+        }
+    };
+
+    const resetGame = () => {
+        setBoard([0, 0, 0, 0, 0, 0, 0, 0, 0]);
+        setChaal('1');
+        setWinner('');
+    };
+
     return (
-        <div className='w-full h-screen bg-slate-800 text-white'>
-            <h1 className='h-20 flex justify-center items-center font-serif font-bold text-5xl tracking-wide'>Bot Page</h1>
+        <div className='w-full h-screen bg-slate-800 text-white relative'>
+            <h1 className='h-20 flex justify-center items-center font-serif font-bold text-5xl tracking-wide'>Online Multiplayer</h1>
+            {!isPlayer && <div className='w-full h-screen absolute top-0 left-0 z-10 flex flex-col items-center justify-center bg-transparent backdrop-blur-xl'>
+                <h1 className='font-bold text-4xl tracking-wide -mt-10 mb-5'>Enter Your Name and Room Code</h1>
+                <div className='w-[60%] h-[60%] border-4 border-emerald-400 rounded-2xl flex flex-col gap-6 items-center pt-5 '>
+                    <input type="text" onChange={(e) => { setName(e.target.value) }} className='w-full h-16 bg-transparent text-white font-bold text-3xl tracking-wide px-5 focus:outline-0' placeholder='Your Name' />
+                    <input type="text" onChange={(e) => { setCode(e.target.value) }} className='w-full h-16 bg-transparent text-white font-bold text-3xl tracking-wide px-5 focus:outline-0' placeholder='Room Code' />
+                    <button className='w-[95%] h-16 bg-emerald-500 text-white font-bold text-3xl tracking-wide rounded-md' onClick={handleJoin}>Join</button>
+                </div>
+            </div>}
+            <div className='w-full h-10 flex items-center font-bold text-xl font-serif tracking-wide text-green-500 px-10 mt-2'>
+                {!winner && (chaal === '1' ? `${player1} Turn` : `${player2} Turn`)}
+                {winner && (winner === 'draw' ? `It's a draw!` : `Winner is : ${chaal === '2' ? player1 : player2} !`)}
+            </div>
+            <div className='w-[90%] md:w-[70%] md:h-[70vh] relative h-[68vh] bg-slate-600 rounded-3xl mt-5 grid grid-cols-3 grid-rows-3 gap-3 overflow-hidden mx-auto '>
+                {winner && (
+                    <div className="bg-transparent w-[100%] h-full flex flex-col items-center justify-center absolute backdrop-blur-lg text-5xl text-center font-bold">
+                        {winner === 'draw' ? `It's a draw!` : (winner === '1' ? `Player 1 wins!` : `Player 2 wins!`)}
+                        <button className="bg-blue-500 text-white px-4 py-2 rounded-3xl mt-4 text-3xl border border-white" onClick={resetGame}>Play Again</button>
+                    </div>
+                )}
+                {board.map((value, index) => (
+                    <div
+                        key={index}
+                        className={`bg-red-400 flex items-center justify-center text-8xl`}
+                        id={index}
+                        onClick={() => handleClick(index)}
+                    >
+                        {value === 1 ? 'X' : value === 2 ? 'O' : ''}
+                    </div>
+                ))}
+            </div>
 
         </div>
     )

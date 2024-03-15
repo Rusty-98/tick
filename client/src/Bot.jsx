@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 const Bot = () => {
-    const [board, setBoard] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0]); // Board state setup for the game
+    const [board, setBoard] = useState([1, 0, 0, 0, 0, 0, 0, 0, 0]); // Board state setup for the game
     const [chaal, setChaal] = useState('Player');  // Determines whose turn it is - Bot or Player
     const [winner, setWinner] = useState(''); // Stores the winner of the game if any
     const [botDelay, setBotDelay] = useState(500); // Delay for Bot's move
@@ -21,6 +21,25 @@ const Bot = () => {
             if (cell === 0) acc.push(index);
             return acc;
         }, []);
+
+        if ((board[1] === 2 || board[3] === 2) && board[4] === 0) {
+            const newData = [...board];
+            newData[4] = 1; // Bot's move
+            setBoard(newData);
+            checkWinner(newData);
+            setChaal('Player'); // Change turn to Player
+            return;
+
+        }
+
+        if ((board[8] === 2) && board[6] === 0) {
+            const newData = [...board];
+            newData[6] = 1; // Bot's move
+            setBoard(newData);
+            checkWinner(newData);
+            setChaal('Player'); // Change turn to Player
+            return;
+        }
 
         const randomIndex = Math.floor(Math.random() * emptyCells.length);
         const botMoveIndex = emptyCells[randomIndex];
