@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from "react-router-dom"
 import io from 'socket.io-client';
+import { MdContentCopy } from "react-icons/md";
 
 const Online = () => {
     const socket = useMemo(() => io("https://tic-tack.onrender.com/"), []);
@@ -12,9 +13,12 @@ const Online = () => {
     const [winner, setWinner] = useState("");
     const [chaal, setChaal] = useState('1');
     const [board, setBoard] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0]);
+    const [gcode, setGcode] = useState('- - - - - -');
+    const [copied, setCopied] = useState(false); // State to track if code is copied
 
     const handleJoin = () => {
-        if (name === "" || code === "") {
+        if (name === "" || code === "" || !(/^\d{6}$/.test(code))) {
+            alert("Please enter a 6-digit room code.");
             return;
         }
         setIsPlayer(true);
@@ -23,6 +27,18 @@ const Online = () => {
             code: code,
         };
         socket.emit("enter", data);
+    };
+
+    const generateCode = () => {
+        const newCode = Math.floor(100000 + Math.random() * 900000); // Generate a random 6-digit number
+        setGcode(newCode.toString());
+        setCopied(false); // Reset copied state when generating new code
+    };
+
+    const copyCodeToClipboard = () => {
+        navigator.clipboard.writeText(gcode);
+        alert('Code copied to clipboard!');
+        setCopied(true); // Set copied state to true after copying
     };
 
     useEffect(() => {
@@ -119,18 +135,29 @@ const Online = () => {
         setWinner('');
     };
 
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            handleJoin();
+        }
+    };
+
     return (
-        <div className='w-full h-screen bg-slate-800 text-white relative'>
-            <div className='w-full relative flex items-center'>
-                <Link to={`/`}><button className='absolute top-[50%] -translate-y-[50%] left-7 text-xl border-2 border-white px-2 py-1 font-serif tracking-wide font-bold rounded-lg'>Back</button></Link>
-                <h1 className='text-5xl font-bold mx-auto font-serif tracking-wider text-center pt-4'>Online Multiplayer</h1>
+        <div className='w-full h-[90vh] md:h-[95vh] bg-slate-800 text-white relative'>
+            <div className='w-full h-16 md:h-20 relative flex items-center'>
+                <Link to={`/`}><button className='absolute top-[50%] -translate-y-[50%] left-1 md:left-7 md:text-xl text-lg border-2 border-white px-1 md:px-2 py-1 font-serif tracking-wide font-bold rounded-lg mt-2'>Back</button></Link>
+                <h1 className='text-2xl md:text-5xl font-bold mx-auto font-serif tracking-wider text-center pt-2'>Online Multiplayer</h1>
             </div>
-            {!isPlayer && <div className='w-full h-screen absolute top-0 left-0 z-10 flex flex-col items-center justify-center bg-transparent backdrop-blur-xl'>
+            {!isPlayer && <div className='w-full h-[90vh] md:h-[95vh] absolute top-0 left-0 z-10 flex flex-col items-center justify-center bg-transparent backdrop-blur-xl'>
                 <h1 className='font-bold text-2xl md:text-4xl tracking-wide -mt-10 mb-5'>Enter Your Name and Room Code</h1>
                 <div className='w-[90%] md:w-[60%] h-[40%] md:h-[60%] border-4 border-emerald-400 rounded-2xl flex flex-col gap-6 items-center pt-5 '>
-                    <input type="text" onChange={(e) => { setName(e.target.value) }} className='w-full h-16 bg-transparent text-white font-bold text-3xl tracking-wide px-5 focus:outline-0' placeholder='Your Name' />
-                    <input type="text" onChange={(e) => { setCode(e.target.value) }} className='w-full h-16 bg-transparent text-white font-bold text-3xl tracking-wide px-5 focus:outline-0' placeholder='Room Code' />
+                    <input type="text" onKeyPress={handleKeyPress} onChange={(e) => { setName(e.target.value) }} className='w-full h-16 bg-transparent text-white font-bold text-3xl tracking-wide px-5 focus:outline-0' placeholder='Your Name' />
+                    <input type="text" onKeyPress={handleKeyPress} onChange={(e) => { setCode(e.target.value) }} className='w-full h-16 bg-transparent text-white font-bold text-3xl tracking-wide px-5 focus:outline-0' placeholder='Room Code' />
                     <button className='w-[95%] h-16 bg-emerald-500 text-white font-bold text-3xl tracking-wide rounded-md' onClick={handleJoin}>Join</button>
+                </div>
+                <div className='w-[90%] md:w-[60%] h-20 mt-5 flex items-center'>
+                    <button className="text-white font-lemon font-bold tracking-wider bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 rounded-lg text-sm md:text-xl px-5 py-2.5 text-center me-2 mb-2" onClick={generateCode}>Generate Code</button>
+                    <h1 className='font-lemon font-bold tracking-wider text-lg md:text-2xl'>: {gcode} </h1>
+                    {gcode !== '- - - - - -' && <button className={`ml-4 text-lg md:text-xl ${copied && 'bg-green-400'} p-1 md:p-2 rounded-full`} onClick={copyCodeToClipboard}>{<MdContentCopy />}</button>}
                 </div>
             </div>}
             <div className='w-full h-10 flex items-center font-bold text-xl font-serif tracking-wide text-green-500 px-10 mt-2'>
