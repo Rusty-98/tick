@@ -1,79 +1,96 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import io from 'socket.io-client'
+import React, { useEffect, useMemo, useState } from 'react';
+import io from 'socket.io-client';
 
 const Online = () => {
-
-    const socket = useMemo(() => io("http://localhost:3000"), []);
+    const socket = useMemo(() => io("http://localhost:4000"), []);
     const [isPlayer, setIsPlayer] = useState(false);
     const [name, setName] = useState("");
-    const [code, setCode] = useState();
-    const [player1, setPlayer1] = useState("");
-    const [player2, setPlayer2] = useState("");
+    const [code, setCode] = useState("");
+    const [playerNum, setPlayerNum] = useState("");
     const [wait, setWait] = useState(true);
-    const [winner, setWinner] = useState();
+    const [winner, setWinner] = useState("");
     const [chaal, setChaal] = useState('1');
-    const [board, setBoard] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0])
-    const [socketId, setSocketId] = useState("");
+    const [board, setBoard] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0]);
 
     const handleJoin = () => {
-        if (name === "" || code === undefined) {
+        if (name === "" || code === "") {
             return;
         }
         setIsPlayer(true);
         const data = {
             name: name,
             code: code,
-        }
-        socket.emit("set", data)
-    }
-
-    useEffect(() => {
-
-        socket.on("connect", () => {
-            setSocketId(socket.id);
-            console.log("connected", socket.id);
-        });
-
-        const gameStartHandler = (data) => {
-            console.log(data.player1, data.player2);
-            setWait(false);
-            setPlayer1(data.player1);
-            setPlayer2(data.player2);
         };
-
-        socket.on("receive-board", (data) => {
-            console.log(data);
-            setBoard((board) => [...board, data]);
-        });
-
-        socket.on("gameStart", gameStartHandler);
-
-        return () => {
-            socket.off("gameStart", gameStartHandler);
-        };
-    }, [socket, player1, player2]);
-
-    const handleClick = (id) => {
-        if (winner !== '' || board[id] !== 0) return; // Don't allow clicks if there's already a winner or the cell is already filled
-        const newData = [...board];
-        newData[id] = chaal === '1' ? 1 : 2; // Player 1 move if chaal is '1', otherwise Player 2 move
-        setBoard(newData);
-        checkWinner(newData);
-        setChaal(chaal === '1' ? '2' : '1'); // Change turn to Player 2 if Player 1 is the current player, otherwise change to Player 1
-        socket.emit('turn', newData);
+        socket.emit("enter", data);
     };
 
     useEffect(() => {
-        const tableHandler = (data) => {
-            setBoard(data);
-        };
-
-        socket.on("table", tableHandler);
+        socket.on("connect", () => {
+            console.log("Connected to server");
+        });
 
         return () => {
-            socket.off("table", tableHandler);
+            socket.off("connect");
         };
-    })
+    }, [socket]);
+
+    useEffect(() => {
+        socket.on("entry", (data) => {
+            alert(data);
+        });
+        socket.on('other', (data) => {
+            alert(data);
+            setWait(false);
+        });
+
+        return () => {
+            socket.off('entry');
+            socket.off('other');
+        };
+    }, [socket]);
+
+    useEffect(() => {
+        socket.on("player1", (data) => {
+            alert(data);
+            setPlayerNum("1");
+        });
+        socket.on("player2", (data) => {
+            alert(data);
+            setPlayerNum("2");
+        });
+
+        return () => {
+            socket.off("player1");
+            socket.off("player2");
+        };
+    }, [socket]);
+
+    useEffect(() => {
+        const tableHandler = (data) => {
+            console.log(data.newData);
+            setBoard(data.newData);
+            setChaal(data.chaal);
+            checkWinner(data.newData);
+        };
+
+        socket.on("turnR", tableHandler);
+
+        return () => {
+            socket.off("turnR", tableHandler);
+        };
+    }, []);
+
+    const handleClick = (id) => {
+        if (!winner && playerNum === chaal && board[id] === 0) {
+            const newData = [...board];
+            newData[id] = chaal === '1' ? 1 : 2;
+            setBoard(newData);
+            checkWinner(newData);
+            const nextChaal = chaal === '1' ? '2' : '1';
+            setChaal(nextChaal);
+            socket.emit('turn', { newData, code, chaal: nextChaal });
+        }
+    };
 
     const checkWinner = (currentData) => {
         const winningCombos = [
@@ -85,11 +102,7 @@ const Online = () => {
         for (const combo of winningCombos) {
             const [a, b, c] = combo;
             if (currentData[a] !== 0 && currentData[a] === currentData[b] && currentData[b] === currentData[c]) {
-                if (currentData[a] === 1) {
-                    setWinner("1");
-                } else {
-                    setWinner('2');
-                }
+                setWinner(currentData[a].toString());
                 return;
             }
         }
@@ -117,17 +130,17 @@ const Online = () => {
                 </div>
             </div>}
             <div className='w-full h-10 flex items-center font-bold text-xl font-serif tracking-wide text-green-500 px-10 mt-2'>
-                {!winner && (chaal === '1' ? `${player1} Turn` : `${player2} Turn`)}
-                {winner && (winner === 'draw' ? `It's a draw!` : `Winner is : ${chaal === '2' ? player1 : player2} !`)}
+                {!winner && (chaal === playerNum ? `Your Turn` : `Opponent's Turn`)}
+                {winner && (winner === 'draw' ? `It's a draw!` : `Winner is : Player ${winner}!`)}
             </div>
             <div className='w-[90%] md:w-[70%] md:h-[70vh] relative h-[68vh] bg-slate-600 rounded-3xl mt-5 grid grid-cols-3 grid-rows-3 gap-3 overflow-hidden mx-auto '>
                 {winner && (
                     <div className="bg-transparent w-[100%] h-full flex flex-col items-center justify-center absolute backdrop-blur-lg text-5xl text-center font-bold">
-                        {winner === 'draw' ? `It's a draw!` : (winner === '1' ? `Player 1 wins!` : `Player 2 wins!`)}
+                        {winner === 'draw' ? `It's a draw!` : `Player ${winner} wins!`}
                         <button className="bg-blue-500 text-white px-4 py-2 rounded-3xl mt-4 text-3xl border border-white" onClick={resetGame}>Play Again</button>
                     </div>
                 )}
-                {board.map((value, index) => (
+                {board && board.map((value, index) => (
                     <div
                         key={index}
                         className={`bg-red-400 flex items-center justify-center text-8xl`}
@@ -138,9 +151,8 @@ const Online = () => {
                     </div>
                 ))}
             </div>
-
         </div>
-    )
-}
+    );
+};
 
-export default Online
+export default Online;

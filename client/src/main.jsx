@@ -9,6 +9,7 @@ import './index.css'
 import Online from './Online.jsx';
 import Bot from './Bot.jsx';
 import Local from './Local.jsx';
+import Soon from './Soon.jsx';
 
 const router = createBrowserRouter([
   {
@@ -21,7 +22,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/bot",
-    element: <Bot />,
+    element: <Soon />,
   },
   {
     path: "/local",

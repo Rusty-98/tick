@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import RLAgent from './RLAgent'; // Import the RLAgent class
 
 const Bot = () => {
-    const [board, setBoard] = useState([1, 0, 0, 0, 0, 0, 0, 0, 0]); // Board state setup for the game
-    const [chaal, setChaal] = useState('Player');  // Determines whose turn it is - Bot or Player
+    const [board, setBoard] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0]); // Board state setup for the game
+    const [chaal, setChaal] = useState('Player'); // Determines whose turn it is - Bot or Player
     const [winner, setWinner] = useState(''); // Stores the winner of the game if any
     const [botDelay, setBotDelay] = useState(500); // Delay for Bot's move
+
+    const rlAgent = new RLAgent(); // Create an instance of the RLAgent
 
     useEffect(() => {
         if (chaal === 'Bot' && winner === '') {
@@ -21,36 +24,23 @@ const Bot = () => {
             if (cell === 0) acc.push(index);
             return acc;
         }, []);
-
-        if ((board[1] === 2 || board[3] === 2) && board[4] === 0) {
-            const newData = [...board];
-            newData[4] = 1; // Bot's move
-            setBoard(newData);
-            checkWinner(newData);
-            setChaal('Player'); // Change turn to Player
-            return;
-
+        // Use RLAgent to choose the best move
+        let botMoveIndex;
+        if (emptyCells.length > 0) {
+            botMoveIndex = rlAgent.chooseMove(board);
+        } else {
+            // If no empty cells are available, choose a random move
+            botMoveIndex = Math.floor(Math.random() * 9);
         }
-
-        if ((board[8] === 2) && board[6] === 0) {
-            const newData = [...board];
-            newData[6] = 1; // Bot's move
-            setBoard(newData);
-            checkWinner(newData);
-            setChaal('Player'); // Change turn to Player
-            return;
-        }
-
-        const randomIndex = Math.floor(Math.random() * emptyCells.length);
-        const botMoveIndex = emptyCells[randomIndex];
 
         const newData = [...board];
-        newData[botMoveIndex] = 1; // Bot's move
+        newData[botMoveIndex] = 2; // Bot's move should be 2
         setBoard(newData);
         checkWinner(newData);
         setChaal('Player'); // Change turn to Player
     };
 
+    // Modify handleClick function to update RLAgent after each move
     const handleClick = (id) => {
         if (winner !== '' || board[id] !== 0) return; // Don't allow clicks if there's already a winner or it's not the current player's turn
         const newData = [...board];
@@ -58,6 +48,9 @@ const Bot = () => {
         setBoard(newData);
         checkWinner(newData);
         setChaal('Bot'); // Change turn to Bot
+
+        // Update RLAgent after each move
+        rlAgent.updateQValue(board, id, newData, winner);
     };
 
     const checkWinner = (currentData) => {
@@ -85,7 +78,7 @@ const Bot = () => {
     };
 
     const resetGame = () => {
-        setBoard([0, 0, 0, 0, 0, 0, 0, 0, 0]);
+        setBoard([1, 0, 0, 0, 0, 0, 0, 0, 0]);
         setChaal('Player');
         setWinner('');
     };
