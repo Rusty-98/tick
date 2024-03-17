@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { Link } from "react-router-dom"
 import io from 'socket.io-client';
 
 const Online = () => {
@@ -120,10 +121,13 @@ const Online = () => {
 
     return (
         <div className='w-full h-screen bg-slate-800 text-white relative'>
-            <h1 className='h-20 flex justify-center items-center font-serif font-bold text-5xl tracking-wide'>Online Multiplayer</h1>
+            <div className='w-full relative flex items-center'>
+                <Link to={`/`}><button className='absolute top-[50%] -translate-y-[50%] left-7 text-xl border-2 border-white px-2 py-1 font-serif tracking-wide font-bold rounded-lg'>Back</button></Link>
+                <h1 className='text-5xl font-bold mx-auto font-serif tracking-wider text-center pt-4'>Online Multiplayer</h1>
+            </div>
             {!isPlayer && <div className='w-full h-screen absolute top-0 left-0 z-10 flex flex-col items-center justify-center bg-transparent backdrop-blur-xl'>
-                <h1 className='font-bold text-4xl tracking-wide -mt-10 mb-5'>Enter Your Name and Room Code</h1>
-                <div className='w-[60%] h-[60%] border-4 border-emerald-400 rounded-2xl flex flex-col gap-6 items-center pt-5 '>
+                <h1 className='font-bold text-2xl md:text-4xl tracking-wide -mt-10 mb-5'>Enter Your Name and Room Code</h1>
+                <div className='w-[90%] md:w-[60%] h-[40%] md:h-[60%] border-4 border-emerald-400 rounded-2xl flex flex-col gap-6 items-center pt-5 '>
                     <input type="text" onChange={(e) => { setName(e.target.value) }} className='w-full h-16 bg-transparent text-white font-bold text-3xl tracking-wide px-5 focus:outline-0' placeholder='Your Name' />
                     <input type="text" onChange={(e) => { setCode(e.target.value) }} className='w-full h-16 bg-transparent text-white font-bold text-3xl tracking-wide px-5 focus:outline-0' placeholder='Room Code' />
                     <button className='w-[95%] h-16 bg-emerald-500 text-white font-bold text-3xl tracking-wide rounded-md' onClick={handleJoin}>Join</button>

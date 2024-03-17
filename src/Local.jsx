@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from "react-router-dom"
 
 const Local = () => {
 
@@ -47,7 +48,10 @@ const Local = () => {
 
     return (
         <div className='w-full h-screen bg-slate-800 text-white'>
-            <h1 className='text-5xl font-bold font-serif tracking-wider text-center pt-4'>Tic Tac Toe</h1>
+            <div className='w-full relative flex items-center'>
+                <Link to={`/`}><button className='absolute top-[50%] -translate-y-[50%] left-7 text-xl border-2 border-white px-2 py-1 font-serif tracking-wide font-bold rounded-lg'>Back</button></Link>
+                <h1 className='text-5xl font-bold mx-auto font-serif tracking-wider text-center pt-4'>Tic Tac Toe</h1>
+            </div>
             <div className='w-full h-10 flex items-center font-bold text-xl font-serif tracking-wide text-green-500 px-10 mt-2'>
                 {!winner && (chaal === '1' ? `Player 1 Turn` : `Player 2 Turn`)}
                 {winner && (winner === 'draw' ? `It's a draw!` : `Winner: Player ${chaal === '2' ? 1 : 2} !`)}

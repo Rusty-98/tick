@@ -7,9 +7,10 @@ import {
 import App from './App.jsx'
 import './index.css'
 import Online from './Online.jsx';
-import Bot from './Bot.jsx';
+// import Bot from './Bot.jsx';
 import Local from './Local.jsx';
 import Soon from './Soon.jsx';
+import Footer from './Components/Footer.jsx';
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <>
+
     <RouterProvider router={router} />
+    <Footer />
   </>,
 )
