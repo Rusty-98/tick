@@ -15,7 +15,7 @@ const Footer = () => {
     }
 
     return (
-        <div className='h-[70px] bg-black flex justify-between w-full absolute bottom-0'>
+        <div className='h-[70px] bg-black flex justify-between w-full fixed z-10 bottom-0'>
             <div className='text-white text-4xl font-bold font-serif tracking-wider pl-4 h-full w-fit flex items-center'>
                 Rusty #98
             </div>

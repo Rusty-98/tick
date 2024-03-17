@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Krona+One&family=Madimi+One&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Krona+One&family=Lemon&family=Madimi+One&display=swap');
+
+:root {
+    /* violet */
+    --primary-color: 111, 76, 255;
+
+    /* white */
+    --text-color: 256, 256, 256;
+}
+
+.btn {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-glow:hover {
+    box-shadow: rgba(var(--primary-color), 0.5) 0px 0px 20px 0px;
+}
+
+/* https://sushi.com/ */
+.btn-gradient {
+    background-image: linear-gradient(to right, rgb(1 134 218), rgb(182 49 167));
+    border: 0;
+    color: rgba(var(--text-color));
+}

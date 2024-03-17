@@ -5,7 +5,12 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        madimiOne : ["Madimi One", "sans-serif"],
+        lemon : ["Lemon", "sans-serif"],
+      }
+    },
   },
   plugins: [],
 }
