@@ -11,6 +11,7 @@ import Online from './Online.jsx';
 import Local from './Local.jsx';
 import Soon from './Soon.jsx';
 import Footer from './Components/Footer.jsx';
+import Sbot from './Sbot.jsx';
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
   {
     path: "/local",
     element: <Local />,
+  },
+  {
+    path: "/dev",
+    element: <Sbot />,
   },
 ]);
 
