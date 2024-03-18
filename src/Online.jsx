@@ -54,7 +54,6 @@ const Online = () => {
     useEffect(() => {
         socket.on("entry", (data) => {
             alert(data);
-            setWait(false);
         });
         socket.on('other', (data) => {
             alert(data);
@@ -74,6 +73,7 @@ const Online = () => {
         });
         socket.on("player2", (data) => {
             alert(data);
+            setWait(false);
             setPlayerNum("2");
         });
 
