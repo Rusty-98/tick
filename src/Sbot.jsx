@@ -120,7 +120,7 @@ const Sbot = () => {
             return;
         }
 
-        if (board[2] === 2 && board[8] === 1 && board[4] === 2 && board[6] === 0) {
+        if (board[0] === 1 && board[2] === 2 && board[8] === 1 && board[4] === 2 && board[6] === 0 && board[3] === 0 && board[5] === 0 && board[7] === 0) {
             const newData = [...board];
             newData[6] = 1; // Bot's move
             setBoard(newData);
@@ -129,7 +129,7 @@ const Sbot = () => {
             return;
         }
 
-        if (board[0] === 1 && board[8] === 2 && (board[6] === 0 || board[2] === 0)) {
+        if (board[0] === 1 && board[8] === 2 && (board[6] === 0 || board[2] === 0) && board[4] === 0 && board[1] === 0 && board[3] === 0 && board[5] === 0 && board[7] === 0) {
             const newData = [...board];
             const randomIndex = Math.random() < 0.5 ? 6 : 2; // Randomly choose between 6 or 2
             newData[randomIndex] = 1; // Bot's move
@@ -139,7 +139,9 @@ const Sbot = () => {
             return;
         }
 
-        if(board[0] === 1 && board[8] === 2 && board[2] === 1 && board[1] === 2 && board[6] === 0 && board[3] === 0 && board[4] === 0 && board[5] === 0 && board[7] === 0){
+        //critical conditions
+
+        if (board[0] === 1 && board[8] === 2 && board[2] === 1 && board[1] === 2 && board[6] === 0 && board[3] === 0 && board[4] === 0 && board[5] === 0 && board[7] === 0) {
             const newData = [...board];
             newData[6] = 1; // Bot's move
             setBoard(newData);
@@ -148,7 +150,9 @@ const Sbot = () => {
             return;
         }
 
-        if(board[0] === 1 && board[8] === 2 && board[6] === 1 && board[3] === 2 && board[2] === 0){
+        //critical conditions
+
+        if (board[0] === 1 && board[8] === 2 && board[6] === 1 && board[3] === 2 && board[2] === 0 && board[1] === 0 && board[4] === 0 && board[5] === 0 && board[7] === 0) {
             const newData = [...board];
             newData[2] = 1; // Bot's move
             setBoard(newData);
