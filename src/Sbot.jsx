@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 const Sbot = () => {
     const [board, setBoard] = useState([1, 0, 0, 0, 0, 0, 0, 0, 0]); // Board state setup for the game
@@ -17,24 +18,36 @@ const Sbot = () => {
 
     const makeBotMove = () => {
         // Bot logic to make a move
+        const winningCombinations = [
+            [0, 1, 2], [1, 2, 0], [0, 2, 1],
+            [3, 4, 5], [4, 5, 3], [3, 5, 4],
+            [6, 7, 8], [7, 8, 6], [6, 8, 7],
+            [0, 3, 6], [3, 6, 0], [0, 6, 3],
+            [1, 4, 7], [4, 7, 1], [1, 7, 4],
+            [2, 5, 8], [5, 8, 2], [2, 8, 5],
+            [0, 4, 8], [4, 8, 0], [0, 8, 4],
+            [2, 4, 6], [4, 6, 2], [2, 6, 4]
+        ];
+
+        for (const combination of winningCombinations) {
+            const [a, b, c] = combination;
+            if (board[a] === 1 && board[b] === 1 && board[c] === 0) {
+                const newData = [...board];
+                newData[c] = 1; // Bot's move
+                setBoard(newData);
+                checkWinner(newData);
+                setChaal('Player'); // Change turn to Player
+                return;
+            }
+        }
         const emptyCells = board.reduce((acc, cell, index) => {
             if (cell === 0) acc.push(index);
             return acc;
         }, []);
 
-        // jitne ki first priority wali conditions
-
-        if(board[0] === 1 && board[2] === 1 && board[1] === 0){
-            const newData = [...board];
-            newData[1] = 1; // Bot's move
-            setBoard(newData);
-            checkWinner(newData);
-            setChaal('Player'); // Change turn to Player
-            return;
-        }
 
         //first condition
-        if (board[3] === 2 && board[4] === 0) {
+        if (board[3] === 2 && board[4] === 0 && board[1] === 0 && board[2] === 0 && board[6] === 0 && board[7] === 0 && board[8] === 0) {
             const newData = [...board];
             newData[4] = 1; // Bot's move
             setBoard(newData);
@@ -44,7 +57,7 @@ const Sbot = () => {
 
         }
 
-        if (board[1] === 2 && board[4] === 0) {
+        if (board[1] === 2 && board[4] === 0 && board[3] === 0 && board[2] === 0 && board[6] === 0 && board[7] === 0 && board[8] === 0) {
             const newData = [...board];
             newData[4] = 1; // Bot's move
             setBoard(newData);
@@ -53,7 +66,7 @@ const Sbot = () => {
             return;
         }
 
-        if(board[4] === 1 && board[8] === 0){
+        if (board[4] === 1 && board[8] === 0) {
             const newData = [...board];
             newData[8] = 1; // Bot's move
             setBoard(newData);
@@ -62,7 +75,7 @@ const Sbot = () => {
             return;
         }
 
-        if(board[4] === 1 && board[8] === 2 && board[3] === 0 && board[6] === 0){
+        if (board[4] === 1 && board[8] === 2 && board[3] === 0 && board[6] === 0) {
             const newData = [...board];
             newData[6] = 1; // Bot's move
             setBoard(newData);
@@ -71,7 +84,7 @@ const Sbot = () => {
             return;
         }
 
-        if(board[4] === 1 && board[8] === 2 && board[1] === 0 && board[2] === 0){
+        if (board[4] === 1 && board[8] === 2 && board[1] === 0 && board[2] === 0) {
             const newData = [...board];
             newData[2] = 1; // Bot's move
             setBoard(newData);
@@ -80,7 +93,7 @@ const Sbot = () => {
             return;
         }
 
-        if(board[6] === 2 && board[8] === 0){
+        if (board[6] === 2 && board[8] === 0) {
             const newData = [...board];
             newData[8] = 1; // Bot's move
             setBoard(newData);
@@ -89,7 +102,7 @@ const Sbot = () => {
             return;
         }
 
-        if(board[6] === 2 && board[8] === 1 && board[4] === 2 && board[2] === 0){
+        if (board[6] === 2 && board[8] === 1 && board[4] === 2 && board[2] === 0) {
             const newData = [...board];
             newData[2] = 1; // Bot's move
             setBoard(newData);
@@ -98,7 +111,7 @@ const Sbot = () => {
             return;
         }
 
-        if(board[2] === 2 && board[8] === 0){
+        if (board[2] === 2 && board[8] === 0) {
             const newData = [...board];
             newData[8] = 1; // Bot's move
             setBoard(newData);
@@ -107,9 +120,37 @@ const Sbot = () => {
             return;
         }
 
-        if(board[2] === 2 && board[8] === 1 && board[4] === 2 && board[6] === 0){
+        if (board[2] === 2 && board[8] === 1 && board[4] === 2 && board[6] === 0) {
             const newData = [...board];
             newData[6] = 1; // Bot's move
+            setBoard(newData);
+            checkWinner(newData);
+            setChaal('Player'); // Change turn to Player
+            return;
+        }
+
+        if (board[0] === 1 && board[8] === 2 && (board[6] === 0 || board[2] === 0)) {
+            const newData = [...board];
+            const randomIndex = Math.random() < 0.5 ? 6 : 2; // Randomly choose between 6 or 2
+            newData[randomIndex] = 1; // Bot's move
+            setBoard(newData);
+            checkWinner(newData);
+            setChaal('Player'); // Change turn to Player
+            return;
+        }
+
+        if(board[0] === 1 && board[8] === 2 && board[2] === 1 && board[1] === 2 && board[6] === 0 && board[3] === 0 && board[4] === 0 && board[5] === 0 && board[7] === 0){
+            const newData = [...board];
+            newData[6] = 1; // Bot's move
+            setBoard(newData);
+            checkWinner(newData);
+            setChaal('Player'); // Change turn to Player
+            return;
+        }
+
+        if(board[0] === 1 && board[8] === 2 && board[6] === 1 && board[3] === 2 && board[2] === 0){
+            const newData = [...board];
+            newData[2] = 1; // Bot's move
             setBoard(newData);
             checkWinner(newData);
             setChaal('Player'); // Change turn to Player
@@ -197,8 +238,9 @@ const Sbot = () => {
 
     return (
         <div className='w-full h-screen bg-slate-800 text-white'>
-            <h1 className='text-5xl font-bold font-serif tracking-wider text-center pt-4'>Tic Tac Toe With Bot</h1>
-            <div className='w-full h-10 flex items-center font-bold text-xl font-serif tracking-wide text-green-500 px-10 mt-2'>
+            <h1 className='text-4xl md:text-5xl font-bold font-madimiOne tracking-wider text-center pt-4'>Tic Tac Toe With Bot</h1>
+            <div className='w-full h-10 flex items-center justify-between font-bold text-xl font-lemon tracking-wide text-green-500 px-10 mt-5 md:mt-4'>
+                <Link to={"/"} className='text-white border-2 text-lg md:text-xl border-white px-1 md:px-2 py-1 font-lemon tracking-wide font-bold rounded-lg'>Back</Link>
                 {!winner && (chaal === 'Bot' ? `Bot's Turn` : `Your's Turn`)}
                 {winner && (winner === 'draw' ? `It's a draw!` : `Winner: ${winner}`)}
             </div>

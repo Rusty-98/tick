@@ -169,7 +169,7 @@ const Online = () => {
                 <Link to={`/`}><button className='absolute top-[50%] -translate-y-[50%] left-1 md:left-7 md:text-xl text-lg border-2 border-white px-1 md:px-2 py-1 font-lemon tracking-wide font-bold rounded-lg mt-2'>Back</button></Link>
                 <h1 className='text-2xl md:text-5xl font-bold mx-auto font-madimiOne tracking-wider text-center pt-2'>Online Multiplayer</h1>
             </div>
-            {!isPlayer && <div className='w-full h-[90vh] md:h-[95vh] absolute top-0 left-0 z-10 flex flex-col items-center justify-center bg-transparent backdrop-blur-xl'>
+            {!isPlayer && <div className='w-full h-[94vh] md:h-[95vh] absolute top-0 left-0 z-10 flex flex-col items-center justify-center bg-transparent backdrop-blur-xl'>
                 <h1 className='font-bold text-2xl md:text-4xl tracking-wide -mt-10 mb-5 font-madimiOne'>Enter Your Name and Room Code</h1>
                 <div className='w-[90%] md:w-[60%] h-[40%] md:h-[60%] border-4 border-emerald-400 rounded-2xl flex flex-col gap-6 items-center pt-5 '>
                     <input type="text" onKeyPress={handleKeyPress} onChange={(e) => { setName(e.target.value) }} className='w-full h-16 bg-transparent text-white font-bold text-3xl tracking-wide px-5 focus:outline-0 font-lemon' placeholder='Your Name' />
