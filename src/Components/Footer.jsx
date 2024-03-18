@@ -15,8 +15,8 @@ const Footer = () => {
     }
 
     return (
-        <div className='h-[70px] bg-black flex justify-between w-full fixed z-10 bottom-0'>
-            <div className='text-white text-4xl font-bold font-serif tracking-wider pl-4 h-full w-fit flex items-center'>
+        <div className='h-[50px] md:h-[70px] bg-black flex justify-between w-full fixed z-10 bottom-0'>
+            <div className='text-white text-2xl md:text-4xl font-semibold font-lemon tracking-wider pl-4 h-full w-fit flex items-center'>
                 Rusty #98
             </div>
             <div className='h-full flex justify-center items-center mr-4'>

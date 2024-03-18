@@ -54,6 +54,7 @@ const Online = () => {
     useEffect(() => {
         socket.on("entry", (data) => {
             alert(data);
+            setWait(false);
         });
         socket.on('other', (data) => {
             alert(data);
@@ -133,6 +134,7 @@ const Online = () => {
         setBoard([0, 0, 0, 0, 0, 0, 0, 0, 0]);
         setChaal('1');
         setWinner('');
+        setWait(true);
     };
 
     const handleKeyPress = (e) => {
@@ -165,7 +167,7 @@ const Online = () => {
                 {!winner && !wait && (chaal === playerNum ? `Your Turn` : `Opponent's Turn`)}
                 {winner && (winner === 'draw' ? `It's a draw!` : `Winner is : Player ${winner}!`)}
             </div>
-            <div className='w-[90%] md:w-[70%] md:h-[70vh] relative h-[68vh] bg-slate-600 rounded-3xl mt-5 grid grid-cols-3 grid-rows-3 gap-3 overflow-hidden mx-auto '>
+            <div className='w-[90%] md:w-[70%] md:h-[70vh] relative h-[65vh] bg-slate-600 rounded-3xl mt-5 grid grid-cols-3 grid-rows-3 gap-3 overflow-hidden mx-auto '>
                 {wait && <div className='w-full h-full absolute backdrop-blur-md'>
                    <img src="/load.svg" alt="" className='w-[80%] h-[80%] mx-auto' />
                 </div>}
