@@ -15,6 +15,7 @@ const Online = () => {
     const [board, setBoard] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0]);
     const [gcode, setGcode] = useState('- - - - - -');
     const [copied, setCopied] = useState(false); // State to track if code is copied
+    const [rule, setRule] = useState(false);
 
     const handleJoin = () => {
         if (code === "" || !(/^\d{6}$/.test(code))) {
@@ -158,6 +159,10 @@ const Online = () => {
         }
     };
 
+    const handleRule = () => {
+        setRule(!rule);
+    }
+
     return (
         <div className='w-full h-[94vh] md:h-[95vh] bg-slate-800 text-white relative'>
             <div className='w-full h-16 md:h-20 relative flex items-center'>
@@ -176,6 +181,16 @@ const Online = () => {
                     <h1 className='font-lemon font-bold tracking-wider text-lg md:text-2xl'>: {gcode} </h1>
                     {gcode !== '- - - - - -' && <button className={`ml-4 text-lg md:text-xl ${copied && 'bg-green-400'} p-1 md:p-2 rounded-full`} onClick={copyCodeToClipboard}>{<MdContentCopy />}</button>}
                 </div>
+                <div className='absolute top-5 right-5 h-[50px] w-[50px] border-4 border-purple-500 flex items-center justify-center rounded-full cursor-pointer text-xl md:text-2xl font-lemon' onClick={handleRule} >{rule ? 'X' : '?'}</div>
+                {rule && <div className='w-[95%] md:w-[80%] h-[80%] md:h-[85%] bg-orange-500 absolute rounded-2xl shadow-md shadow-white'>
+                    <h1 className='text-3xl md:text-5xl text-center font-madimiOne tracking-wider mt-4'>Rule to Play</h1>
+                    <p className='text-lg md:text-3xl font-lemon tracking-wide px-5 md:px-10 mt-5 md:mt-20 mb-4 md:mb-10'>1. Enter your name and room code to join the game.</p>
+                    <p className='text-lg md:text-3xl font-lemon tracking-wide px-5 md:px-10 mt-3 mb-4 md:mb-10'>2. Share the room code with your friend to join the game.</p>
+                    <p className='text-lg md:text-3xl font-lemon tracking-wide px-5 md:px-10 mt-3 mb-4 md:mb-10'>3. The game will start when both players have joined the room.</p>
+                    <p className='text-lg md:text-3xl font-lemon tracking-wide px-5 md:px-10 mt-3 mb-4 md:mb-10'>4. The game will end when a player wins or the game is a draw.</p>
+                    <p className='text-lg md:text-3xl font-lemon tracking-wide px-5 md:px-10 mt-3 mb-4 md:mb-10'>5. The game will end if any player leaves the game.</p>
+                    <p className='text-lg md:text-3xl font-lemon tracking-wide px-5 md:px-10 mt-3 mb-4 md:mb-10 text-black'>6. The code should be of 6 digits and you can generate or enter any.</p>
+                </div>}
             </div>}
             <div className='w-full h-10 flex items-center font-bold text-xl font-lemon tracking-wide text-green-500 px-10 mt-10 md:mt-2'>
                 {wait && `Waiting for another player to join...`}
@@ -183,11 +198,11 @@ const Online = () => {
                 {winner && (winner === 'draw' ? `It's a draw!` : `Winner is : Player ${winner}!`)}
             </div>
             <div className='w-[90%] md:w-[70%] md:h-[70vh] relative h-[65vh] bg-slate-600 rounded-3xl mt-5 grid grid-cols-3 grid-rows-3 gap-3 overflow-hidden mx-auto '>
-                {wait && <div className='w-full h-full absolute backdrop-blur-md'>
+                {wait && isPlayer && <div className='w-full h-full absolute backdrop-blur-md'>
                     <img src="/load.svg" alt="" className='w-[80%] h-[80%] mx-auto' />
                 </div>}
                 {winner && (
-                    <div className="bg-transparent w-[100%] h-full flex flex-col items-center justify-center absolute backdrop-blur-lg text-5xl text-center font-bold">
+                    <div className="bg-transparent w-[100%] h-full flex flex-col items-center justify-center absolute backdrop-blur-lg text-4xl md:text-5xl text-center font-bold font-lemon">
                         {winner === 'draw' ? `It's a draw!` : `Player ${winner} wins!`}
                         <button className="bg-blue-500 text-white px-4 py-2 rounded-3xl mt-4 text-3xl border border-white" onClick={resetGame}>Play Again</button>
                     </div>
@@ -195,7 +210,7 @@ const Online = () => {
                 {board && board.map((value, index) => (
                     <div
                         key={index}
-                        className={`bg-red-400 flex items-center justify-center text-8xl`}
+                        className={`bg-red-400 flex items-center justify-center text-8xl font-lemon`}
                         id={index}
                         onClick={() => handleClick(index)}
                     >
@@ -203,6 +218,7 @@ const Online = () => {
                     </div>
                 ))}
             </div>
+
         </div>
     );
 };

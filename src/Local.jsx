@@ -47,18 +47,18 @@ const Local = () => {
     };
 
     return (
-        <div className='w-full h-screen bg-slate-800 text-white'>
+        <div className='w-full h-[94vh] bg-slate-800 text-white'>
             <div className='w-full relative flex items-center'>
-                <Link to={`/`}><button className='absolute top-[50%] -translate-y-[50%] left-2 md:left-7 text-xl border-2 border-white px-2 py-1 mt-2 font-serif tracking-wide font-bold rounded-lg'>Back</button></Link>
-                <h1 className='text-4xl md:text-5xl font-bold mx-auto font-serif tracking-wider text-center pt-4'>Tic Tac Toe</h1>
+                <Link to={`/`}><button className='absolute top-[50%] -translate-y-[50%] left-2 md:left-7 text-xl border-2 border-white px-2 py-1 mt-2 font-lemon tracking-wide font-bold rounded-lg'>Back</button></Link>
+                <h1 className='text-4xl md:text-5xl font-bold mx-auto tracking-wider text-center pt-4 font-madimiOne'>Tic Tac Toe</h1>
             </div>
-            <div className='w-full h-10 flex items-center font-bold text-xl font-serif tracking-wide text-green-500 px-10 mt-2'>
+            <div className='w-full h-10 flex items-center font-bold text-xl font-lemon tracking-wide text-green-500 px-10 mt-2'>
                 {!winner && (chaal === '1' ? `Player 1 Turn` : `Player 2 Turn`)}
                 {winner && (winner === 'draw' ? `It's a draw!` : `Winner: Player ${chaal === '2' ? 1 : 2} !`)}
             </div>
             <div className='w-[90%] md:w-[70%] md:h-[70vh] relative h-[68vh] bg-slate-600 rounded-3xl mt-5 grid grid-cols-3 grid-rows-3 gap-3 overflow-hidden mx-auto '>
                 {winner && (
-                    <div className="bg-transparent w-[100%] h-full flex flex-col items-center justify-center absolute backdrop-blur-lg text-5xl text-center font-bold">
+                    <div className="bg-transparent w-[100%] h-full flex flex-col items-center justify-center absolute backdrop-blur-lg text-4xl md:text-5xl text-center font-bold font-lemon">
                         {winner === 'draw' ? `It's a draw!` : (winner === '1' ? `Player 1 wins!` : `Player 2 wins!`)}
                         <button className="bg-blue-500 text-white px-4 py-2 rounded-3xl mt-4 text-3xl border border-white" onClick={resetGame}>Play Again</button>
                     </div>
@@ -66,7 +66,7 @@ const Local = () => {
                 {board.map((value, index) => (
                     <div
                         key={index}
-                        className={`bg-red-400 flex items-center justify-center text-8xl`}
+                        className={`bg-red-400 flex items-center justify-center text-8xl font-lemon`}
                         id={index}
                         onClick={() => handleClick(index)}
                     >

@@ -24,7 +24,7 @@ const Soon = () => {
     }, [dotCount]);
 
     return (
-        <div className='w-full h-[90vh] md:h-[95vh] bg-slate-800 text-white'>
+        <div className='w-full h-[94vh] md:h-[95vh] bg-slate-800 text-white'>
             <div className='w-full text-xl md:text-3xl tracking-wide font-bold font-madimiOne h-12 md:h-20 flex items-center justify-center'>
                 Its a apology that
             </div>
