@@ -17,8 +17,12 @@ const Online = () => {
     const [copied, setCopied] = useState(false); // State to track if code is copied
 
     const handleJoin = () => {
-        if (name === "" || code === "" || !(/^\d{6}$/.test(code))) {
+        if (code === "" || !(/^\d{6}$/.test(code))) {
             alert("Please enter a 6-digit room code.");
+            return;
+        }
+        if (name === "") {
+            alert("Please enter Name.");
             return;
         }
         setIsPlayer(true);
@@ -37,7 +41,7 @@ const Online = () => {
 
     const copyCodeToClipboard = () => {
         navigator.clipboard.writeText(gcode);
-        alert('Code copied to clipboard!');
+        // alert('Code copied to clipboard!');
         setCopied(true); // Set copied state to true after copying
     };
 
@@ -98,6 +102,18 @@ const Online = () => {
         };
     }, []);
 
+    useEffect(() => {
+        socket.on('playerLeft', () => {
+            alert('The other player has left the game.');
+            // Redirect to the home page
+            window.location.href = '/';
+        });
+
+        return () => {
+            socket.off('playerLeft');
+        };
+    }, [socket]);
+
     const handleClick = (id) => {
         if (!winner && playerNum === chaal && board[id] === 0) {
             const newData = [...board];
@@ -134,7 +150,6 @@ const Online = () => {
         setBoard([0, 0, 0, 0, 0, 0, 0, 0, 0]);
         setChaal('1');
         setWinner('');
-        setWait(true);
     };
 
     const handleKeyPress = (e) => {
@@ -169,7 +184,7 @@ const Online = () => {
             </div>
             <div className='w-[90%] md:w-[70%] md:h-[70vh] relative h-[65vh] bg-slate-600 rounded-3xl mt-5 grid grid-cols-3 grid-rows-3 gap-3 overflow-hidden mx-auto '>
                 {wait && <div className='w-full h-full absolute backdrop-blur-md'>
-                   <img src="/load.svg" alt="" className='w-[80%] h-[80%] mx-auto' />
+                    <img src="/load.svg" alt="" className='w-[80%] h-[80%] mx-auto' />
                 </div>}
                 {winner && (
                     <div className="bg-transparent w-[100%] h-full flex flex-col items-center justify-center absolute backdrop-blur-lg text-5xl text-center font-bold">
