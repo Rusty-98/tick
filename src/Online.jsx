@@ -142,29 +142,33 @@ const Online = () => {
     };
 
     return (
-        <div className='w-full h-[90vh] md:h-[95vh] bg-slate-800 text-white relative'>
+        <div className='w-full h-[94vh] md:h-[95vh] bg-slate-800 text-white relative'>
             <div className='w-full h-16 md:h-20 relative flex items-center'>
-                <Link to={`/`}><button className='absolute top-[50%] -translate-y-[50%] left-1 md:left-7 md:text-xl text-lg border-2 border-white px-1 md:px-2 py-1 font-serif tracking-wide font-bold rounded-lg mt-2'>Back</button></Link>
-                <h1 className='text-2xl md:text-5xl font-bold mx-auto font-serif tracking-wider text-center pt-2'>Online Multiplayer</h1>
+                <Link to={`/`}><button className='absolute top-[50%] -translate-y-[50%] left-1 md:left-7 md:text-xl text-lg border-2 border-white px-1 md:px-2 py-1 font-lemon tracking-wide font-bold rounded-lg mt-2'>Back</button></Link>
+                <h1 className='text-2xl md:text-5xl font-bold mx-auto font-madimiOne tracking-wider text-center pt-2'>Online Multiplayer</h1>
             </div>
             {!isPlayer && <div className='w-full h-[90vh] md:h-[95vh] absolute top-0 left-0 z-10 flex flex-col items-center justify-center bg-transparent backdrop-blur-xl'>
-                <h1 className='font-bold text-2xl md:text-4xl tracking-wide -mt-10 mb-5'>Enter Your Name and Room Code</h1>
+                <h1 className='font-bold text-2xl md:text-4xl tracking-wide -mt-10 mb-5 font-madimiOne'>Enter Your Name and Room Code</h1>
                 <div className='w-[90%] md:w-[60%] h-[40%] md:h-[60%] border-4 border-emerald-400 rounded-2xl flex flex-col gap-6 items-center pt-5 '>
-                    <input type="text" onKeyPress={handleKeyPress} onChange={(e) => { setName(e.target.value) }} className='w-full h-16 bg-transparent text-white font-bold text-3xl tracking-wide px-5 focus:outline-0' placeholder='Your Name' />
-                    <input type="text" onKeyPress={handleKeyPress} onChange={(e) => { setCode(e.target.value) }} className='w-full h-16 bg-transparent text-white font-bold text-3xl tracking-wide px-5 focus:outline-0' placeholder='Room Code' />
-                    <button className='w-[95%] h-16 bg-emerald-500 text-white font-bold text-3xl tracking-wide rounded-md' onClick={handleJoin}>Join</button>
+                    <input type="text" onKeyPress={handleKeyPress} onChange={(e) => { setName(e.target.value) }} className='w-full h-16 bg-transparent text-white font-bold text-3xl tracking-wide px-5 focus:outline-0 font-lemon' placeholder='Your Name' />
+                    <input type="text" onKeyPress={handleKeyPress} onChange={(e) => { setCode(e.target.value) }} className='w-full h-16 bg-transparent text-white font-bold text-3xl tracking-wide px-5 focus:outline-0 font-lemon' placeholder='Room Code' />
+                    <button className='w-[95%] h-16 bg-emerald-500 text-white font-bold text-3xl tracking-wide rounded-md font-lemon' onClick={handleJoin}>Join</button>
                 </div>
                 <div className='w-[90%] md:w-[60%] h-20 mt-5 flex items-center'>
-                    <button className="text-white font-lemon font-bold tracking-wider bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 rounded-lg text-sm md:text-xl px-5 py-2.5 text-center me-2 mb-2" onClick={generateCode}>Generate Code</button>
+                    <button className="text-white font-lemon font-bold tracking-wider bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 rounded-lg text-sm md:text-xl px-5 py-2.5 text-center me-2 mb-2" onClick={generateCode}>Generate Code</button>
                     <h1 className='font-lemon font-bold tracking-wider text-lg md:text-2xl'>: {gcode} </h1>
                     {gcode !== '- - - - - -' && <button className={`ml-4 text-lg md:text-xl ${copied && 'bg-green-400'} p-1 md:p-2 rounded-full`} onClick={copyCodeToClipboard}>{<MdContentCopy />}</button>}
                 </div>
             </div>}
-            <div className='w-full h-10 flex items-center font-bold text-xl font-serif tracking-wide text-green-500 px-10 mt-2'>
-                {!winner && (chaal === playerNum ? `Your Turn` : `Opponent's Turn`)}
+            <div className='w-full h-10 flex items-center font-bold text-xl font-lemon tracking-wide text-green-500 px-10 mt-10 md:mt-2'>
+                {wait && `Waiting for another player to join...`}
+                {!winner && !wait && (chaal === playerNum ? `Your Turn` : `Opponent's Turn`)}
                 {winner && (winner === 'draw' ? `It's a draw!` : `Winner is : Player ${winner}!`)}
             </div>
             <div className='w-[90%] md:w-[70%] md:h-[70vh] relative h-[68vh] bg-slate-600 rounded-3xl mt-5 grid grid-cols-3 grid-rows-3 gap-3 overflow-hidden mx-auto '>
+                {wait && <div className='w-full h-full absolute backdrop-blur-md'>
+                   <img src="/load.svg" alt="" className='w-[80%] h-[80%] mx-auto' />
+                </div>}
                 {winner && (
                     <div className="bg-transparent w-[100%] h-full flex flex-col items-center justify-center absolute backdrop-blur-lg text-5xl text-center font-bold">
                         {winner === 'draw' ? `It's a draw!` : `Player ${winner} wins!`}
