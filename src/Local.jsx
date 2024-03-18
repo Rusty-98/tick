@@ -47,7 +47,7 @@ const Local = () => {
     };
 
     return (
-        <div className='w-full h-[94vh] bg-slate-800 text-white'>
+        <div className='w-full h-[94vh] bg-[#131226] text-white'>
             <div className='w-full relative flex items-center'>
                 <Link to={`/`}><button className='absolute top-[50%] -translate-y-[50%] left-2 md:left-7 text-xl border-2 border-white px-2 py-1 mt-2 font-lemon tracking-wide font-bold rounded-lg'>Back</button></Link>
                 <h1 className='text-4xl md:text-5xl font-bold mx-auto tracking-wider text-center pt-4 font-madimiOne'>Tic Tac Toe</h1>

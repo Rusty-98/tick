@@ -164,7 +164,7 @@ const Online = () => {
     }
 
     return (
-        <div className='w-full h-[94vh] md:h-[95vh] bg-slate-800 text-white relative'>
+        <div className='w-full h-[94vh] md:h-[95vh] bg-[#131226] text-white relative'>
             <div className='w-full h-16 md:h-20 relative flex items-center'>
                 <Link to={`/`}><button className='absolute top-[50%] -translate-y-[50%] left-1 md:left-7 md:text-xl text-lg border-2 border-white px-1 md:px-2 py-1 font-lemon tracking-wide font-bold rounded-lg mt-2'>Back</button></Link>
                 <h1 className='text-2xl md:text-5xl font-bold mx-auto font-madimiOne tracking-wider text-center pt-2'>Online Multiplayer</h1>
