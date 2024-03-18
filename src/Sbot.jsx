@@ -241,7 +241,7 @@ const Sbot = () => {
     };
 
     return (
-        <div className='w-full h-screen bg-slate-800 text-white'>
+        <div className='w-full h-[94vh] md:h-[95vh] bg-slate-800 text-white'>
             <h1 className='text-4xl md:text-5xl font-bold font-madimiOne tracking-wider text-center pt-4'>Tic Tac Toe With Bot</h1>
             <div className='w-full h-10 flex items-center justify-between font-bold text-xl font-lemon tracking-wide text-green-500 px-10 mt-5 md:mt-4'>
                 <Link to={"/"} className='text-white border-2 text-lg md:text-xl border-white px-1 md:px-2 py-1 font-lemon tracking-wide font-bold rounded-lg'>Back</Link>
