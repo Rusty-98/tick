@@ -2,9 +2,10 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from "react-router-dom"
 import io from 'socket.io-client';
 import { MdContentCopy } from "react-icons/md";
+import toast, { Toaster } from 'react-hot-toast';
 
 const Online = () => {
-    const socket = useMemo(() => io("https://tic-tack.onrender.com/"), []);
+    const socket = useMemo(() => io("http://localhost:4000"), []);
     const [isPlayer, setIsPlayer] = useState(false);
     const [name, setName] = useState("");
     const [code, setCode] = useState("");
@@ -17,13 +18,24 @@ const Online = () => {
     const [copied, setCopied] = useState(false); // State to track if code is copied
     const [rule, setRule] = useState(false);
 
+    const copy = () => toast.success('Copied!')
+    const codeError = () => toast.error('Wrong code format!')
+    const nameError = () => toast.error('Please enter a name!')
+    const playerJoin = () => toast.success('Player Joined!')
+    const playerone = () => toast("You are Player 1")
+    const playertwo = () => toast("You are Player 2")
+
+
     const handleJoin = () => {
         if (code === "" || !(/^\d{6}$/.test(code))) {
-            alert("Please enter a 6-digit room code.");
+            // alert("Please enter a 6-digit room code.");
+            codeError();
             return;
         }
+
         if (name === "") {
-            alert("Please enter Name.");
+            // alert("Please enter Name.");
+            nameError();
             return;
         }
         setIsPlayer(true);
@@ -32,6 +44,7 @@ const Online = () => {
             code: code,
         };
         socket.emit("enter", data);
+        connecting();
     };
 
     const generateCode = () => {
@@ -44,6 +57,7 @@ const Online = () => {
         navigator.clipboard.writeText(gcode);
         // alert('Code copied to clipboard!');
         setCopied(true); // Set copied state to true after copying
+        copy();
     };
 
     useEffect(() => {
@@ -58,10 +72,13 @@ const Online = () => {
 
     useEffect(() => {
         socket.on("entry", (data) => {
-            alert(data);
+            // alert(data);
+            // console.log(data)
         });
         socket.on('other', (data) => {
-            alert(data);
+            // alert(data);
+            playerJoin();
+            // console.log(data)
             setWait(false);
         });
 
@@ -73,11 +90,13 @@ const Online = () => {
 
     useEffect(() => {
         socket.on("player1", (data) => {
-            alert(data);
+            // alert(data);
+            playerone();
             setPlayerNum("1");
         });
         socket.on("player2", (data) => {
-            alert(data);
+            // alert(data);
+            playertwo();
             setWait(false);
             setPlayerNum("2");
         });
@@ -105,7 +124,7 @@ const Online = () => {
 
     useEffect(() => {
         socket.on('playerLeft', () => {
-            alert('The other player has left the game.');
+            alert('The other player has left the game. 😔');
             // Redirect to the home page
             window.location.href = '/';
         });
@@ -191,6 +210,7 @@ const Online = () => {
                     <p className='text-lg md:text-3xl font-lemon tracking-wide px-5 md:px-10 mt-3 mb-4 md:mb-10'>5. The game will end if any player leaves the game.</p>
                     <p className='text-lg md:text-3xl font-lemon tracking-wide px-5 md:px-10 mt-3 mb-4 md:mb-10 text-black'>6. The code should be of 6 digits and you can generate or enter any.</p>
                 </div>}
+                <Toaster />
             </div>}
             <div className='w-full h-10 flex items-center font-bold text-xl font-lemon tracking-wide text-green-500 px-10 mt-10 md:mt-2'>
                 {wait && `Waiting for another player to join...`}
@@ -218,7 +238,7 @@ const Online = () => {
                     </div>
                 ))}
             </div>
-
+            <Toaster />
         </div>
     );
 };
