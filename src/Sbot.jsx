@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import toast, { Toaster } from 'react-hot-toast';
 
 const Sbot = () => {
     const [board, setBoard] = useState([1, 0, 0, 0, 0, 0, 0, 0, 0]); // Board state setup for the game
@@ -7,6 +8,7 @@ const Sbot = () => {
     const [winner, setWinner] = useState(''); // Stores the winner of the game if any
     const [botDelay, setBotDelay] = useState(500); // Delay for Bot's move
 
+    const BotW = () => toast("Bot se haar gaya", { icon: '🤦‍♂️' });
     useEffect(() => {
         if (chaal === 'Bot' && winner === '') {
             const botMoveTimer = setTimeout(() => {
@@ -222,6 +224,7 @@ const Sbot = () => {
             if (currentData[a] !== 0 && currentData[a] === currentData[b] && currentData[b] === currentData[c]) {
                 if (currentData[a] === 1) {
                     setWinner('Bot');
+                    BotW();
                 } else {
                     setWinner('Player');
                 }
