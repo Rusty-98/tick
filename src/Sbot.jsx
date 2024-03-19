@@ -269,6 +269,7 @@ const Sbot = () => {
                     </div>
                 ))}
             </div>
+            <Toaster />
         </div>
     );
 };
