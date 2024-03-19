@@ -5,7 +5,7 @@ import { MdContentCopy } from "react-icons/md";
 import toast, { Toaster } from 'react-hot-toast';
 
 const Online = () => {
-    const socket = useMemo(() => io("https://tic-tack.onrender.com/"), []);
+    const socket = useMemo(() => io("https://tic-tack.onrender.com"), []);
     const [isPlayer, setIsPlayer] = useState(false);
     const [name, setName] = useState("");
     const [code, setCode] = useState("");
@@ -44,7 +44,6 @@ const Online = () => {
             code: code,
         };
         socket.emit("enter", data);
-        connecting();
     };
 
     const generateCode = () => {
